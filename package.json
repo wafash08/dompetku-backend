@@ -9,7 +9,9 @@
 		"prepare": "husky"
 	},
 	"dependencies": {
-		"elysia": "latest"
+		"@prisma/client": "^6.1.0",
+		"elysia": "latest",
+		"prisma": "^6.1.0"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",
