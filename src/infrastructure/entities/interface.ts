@@ -1,10 +1,13 @@
 import type { Session, Transaction, User } from "@prisma/client";
 
+export type CreateUser = Omit<User, "id">;
+export type UpdateUser = Partial<User>;
+
 export interface IUser {
-	getAll: () => Promise<User | null>;
+	getAll: () => Promise<User[]>;
 	getOne: (id: string) => Promise<User | null>;
-	create: (data: Omit<User, "id">) => Promise<User>;
-	update: (id: string, data: Partial<User>) => Promise<User>;
+	create: (data: CreateUser) => Promise<User>;
+	update: (id: string, data: UpdateUser) => Promise<User>;
 	delete: (id: string) => Promise<void>;
 }
 
@@ -15,7 +18,7 @@ export interface ISession {
 }
 
 export interface ITransaction {
-	getAll: () => Promise<Transaction | null>;
+	getAll: () => Promise<Transaction[]>;
 	getOne: (id: string) => Promise<Transaction | null>;
 	create: (data: Omit<Transaction, "id">) => Promise<Transaction>;
 	update: (id: string, data: Partial<Transaction>) => Promise<Transaction>;
