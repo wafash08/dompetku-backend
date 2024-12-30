@@ -17,10 +17,13 @@ export interface ISession {
 	delete: (sessionId: string) => Promise<void>;
 }
 
+export type CreateTransaction = Omit<Transaction, "id">;
+export type UpdateTransaction = Partial<Transaction>;
+
 export interface ITransaction {
-	getAll: () => Promise<Transaction[]>;
+	getAll: (userId: string) => Promise<Transaction[]>;
 	getOne: (id: string) => Promise<Transaction | null>;
-	create: (data: Omit<Transaction, "id">) => Promise<Transaction>;
-	update: (id: string, data: Partial<Transaction>) => Promise<Transaction>;
+	create: (data: CreateTransaction) => Promise<Transaction>;
+	update: (id: string, data: UpdateTransaction) => Promise<Transaction>;
 	delete: (id: string) => Promise<void>;
 }

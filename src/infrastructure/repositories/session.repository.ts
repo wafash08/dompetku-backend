@@ -1,4 +1,4 @@
-import type { PrismaClient, Session } from "@prisma/client";
+import type { PrismaClient } from "@prisma/client";
 import type { ISession } from "../entities/interface";
 
 export class SessionRepository implements ISession {
