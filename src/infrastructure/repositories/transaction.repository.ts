@@ -4,10 +4,15 @@ import type {
 	ITransaction,
 	UpdateTransaction,
 } from "../entities/interface";
+import "reflect-metadata";
+import { inject, injectable } from "inversify";
+import { TYPES } from "../entities/types";
 
-export class UserRepository implements ITransaction {
+@injectable()
+export class TransactionRepository implements ITransaction {
 	private _prisma: PrismaClient;
-	constructor(prisma: PrismaClient) {
+
+	constructor(@inject(TYPES.prisma) prisma: PrismaClient) {
 		this._prisma = prisma;
 	}
 

@@ -1,9 +1,14 @@
 import type { PrismaClient } from "@prisma/client";
 import type { CreateUser, IUser, UpdateUser } from "../entities/interface";
+import "reflect-metadata";
+import { inject, injectable } from "inversify";
+import { TYPES } from "../entities/types";
 
+@injectable()
 export class UserRepository implements IUser {
 	private _prisma: PrismaClient;
-	constructor(prisma: PrismaClient) {
+
+	constructor(@inject(TYPES.prisma) prisma: PrismaClient) {
 		this._prisma = prisma;
 	}
 

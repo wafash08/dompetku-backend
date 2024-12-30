@@ -1,9 +1,14 @@
 import type { PrismaClient } from "@prisma/client";
 import type { ISession } from "../entities/interface";
+import "reflect-metadata";
+import { inject, injectable } from "inversify";
+import { TYPES } from "../entities/types";
 
+@injectable()
 export class SessionRepository implements ISession {
 	private _prisma: PrismaClient;
-	constructor(prisma: PrismaClient) {
+
+	constructor(@inject(TYPES.prisma) prisma: PrismaClient) {
 		this._prisma = prisma;
 	}
 
