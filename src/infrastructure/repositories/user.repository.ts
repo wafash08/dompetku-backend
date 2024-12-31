@@ -17,10 +17,10 @@ export class UserRepository implements IUser {
 		return users;
 	}
 
-	async getOne(id: string) {
-		const user = await this._prisma.user.findUnique({
+	async getOne(userIdOrEmail: string) {
+		const user = await this._prisma.user.findFirst({
 			where: {
-				id,
+				OR: [{ id: userIdOrEmail }, { email: userIdOrEmail }],
 			},
 		});
 
@@ -35,10 +35,10 @@ export class UserRepository implements IUser {
 		return newUser;
 	}
 
-	async update(id: string, data: UpdateUser) {
+	async update(userId: string, data: UpdateUser) {
 		const updatedUser = await this._prisma.user.update({
 			where: {
-				id,
+				id: userId,
 			},
 			data,
 		});
@@ -46,10 +46,10 @@ export class UserRepository implements IUser {
 		return updatedUser;
 	}
 
-	async delete(id: string) {
+	async delete(userId: string) {
 		await this._prisma.user.delete({
 			where: {
-				id,
+				id: userId,
 			},
 		});
 	}
