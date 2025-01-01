@@ -4,6 +4,7 @@ import type { UserRepository } from "../../infrastructure/repositories/user.repo
 import "reflect-metadata";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../infrastructure/entities/types";
+import { UserDTO } from "../dtos/user.dto";
 
 @injectable()
 export class AuthServices {
@@ -34,7 +35,7 @@ export class AuthServices {
 			avatar: null,
 		});
 
-		return newUser;
+		return new UserDTO(newUser).fromEntity();
 	}
 
 	async loginUser({ email, password }: { email: string; password: string }) {

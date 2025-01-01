@@ -1,0 +1,8 @@
+ POST http://localhost:3000/api/v1/register
+ Content-Type: application/json
+
+ {
+    "name": "lulu3",
+    "email": "lulu3@gmail.com",
+    "password": "12345678"
+ }

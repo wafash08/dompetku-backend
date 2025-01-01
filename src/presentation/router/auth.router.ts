@@ -1,7 +1,7 @@
 import Elysia, { t } from "elysia";
 import { authServices } from "../../application/instance";
 
-export const authRouter = new Elysia()
+export const authRouter = new Elysia({ prefix: "/v1" })
 	// routes
 	.post(
 		"/register",
@@ -9,7 +9,7 @@ export const authRouter = new Elysia()
 			try {
 				const newUser = await authServices.registerUser({
 					email: body.email,
-					name: body.email,
+					name: body.name,
 					password: body.password,
 					avatar: null,
 				});
@@ -28,8 +28,8 @@ export const authRouter = new Elysia()
 		},
 		{
 			body: t.Object({
-				email: t.String({ minLength: 3 }),
-				name: t.String({ format: "email" }),
+				name: t.String({ minLength: 3 }),
+				email: t.String({ format: "email" }),
 				password: t.String({ minLength: 8 }),
 			}),
 		},
