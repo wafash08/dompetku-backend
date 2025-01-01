@@ -3,11 +3,18 @@ import type {
 	UpdateTransaction,
 } from "../../infrastructure/entities/interface";
 import type { TransactionRepository } from "../../infrastructure/repositories/transaction.repository";
+import "reflect-metadata";
+import { inject, injectable } from "inversify";
+import { TYPES } from "../../infrastructure/entities/types";
 
+@injectable()
 export class TransactionServices {
 	private _transactionRepository: TransactionRepository;
 
-	constructor(transactionRepository: TransactionRepository) {
+	constructor(
+		@inject(TYPES.transactionRepository)
+		transactionRepository: TransactionRepository,
+	) {
 		this._transactionRepository = transactionRepository;
 	}
 

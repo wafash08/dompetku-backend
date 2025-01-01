@@ -1,14 +1,18 @@
 import type { CreateUser } from "../../infrastructure/entities/interface";
 import type { SessionRepository } from "../../infrastructure/repositories/session.repository";
 import type { UserRepository } from "../../infrastructure/repositories/user.repository";
+import "reflect-metadata";
+import { inject, injectable } from "inversify";
+import { TYPES } from "../../infrastructure/entities/types";
 
+@injectable()
 export class AuthServices {
 	private _userRepository: UserRepository;
 	private _sessionRepository: SessionRepository;
 
 	constructor(
-		userRepository: UserRepository,
-		sessionRepository: SessionRepository,
+		@inject(TYPES.userRepository) userRepository: UserRepository,
+		@inject(TYPES.sessionRepository) sessionRepository: SessionRepository,
 	) {
 		this._userRepository = userRepository;
 		this._sessionRepository = sessionRepository;
