@@ -59,7 +59,7 @@ export class AuthServices {
 			throw new Error("Session invalid");
 		}
 
-		return "Valid";
+		return "valid";
 	}
 
 	async decodeSession(sessionId: string) {

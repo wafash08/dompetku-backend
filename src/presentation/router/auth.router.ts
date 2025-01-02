@@ -60,4 +60,36 @@ export const authRouter = new Elysia({ prefix: "/v1" })
 				password: t.String({ minLength: 8 }),
 			}),
 		},
+	)
+	.post(
+		"/session",
+		async ({ body, set }) => {
+			try {
+				const sessionId = body.sessionId;
+
+				const isValid = await authServices.checkSession(sessionId);
+
+				console.log(`is valid > ${isValid}`);
+
+				if (isValid !== "valid") {
+					set.status = 401;
+					return { status: "invalid" };
+				}
+
+				return { status: "valid" };
+			} catch (error) {
+				set.status = 500;
+
+				if (error instanceof Error) {
+					throw new Error(error.message);
+				}
+
+				throw new Error("Something went wrong");
+			}
+		},
+		{
+			body: t.Object({
+				sessionId: t.String(),
+			}),
+		},
 	);

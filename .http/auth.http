@@ -1,3 +1,5 @@
+
+### register
  POST http://localhost:3000/api/v1/register
  Content-Type: application/json
 
@@ -5,4 +7,23 @@
     "name": "lulu3",
     "email": "lulu3@gmail.com",
     "password": "12345678"
+ }
+
+
+### login
+ POST http://localhost:3000/api/v1/login
+ Content-Type: application/json
+
+ {
+    "email": "lulu3@gmail.com",
+    "password": "12345678"
+ }
+
+
+### check session
+ POST http://localhost:3000/api/v1/session
+ Content-Type: application/json
+
+ {
+    "sessionId": "cm5feybx70000rq1dpjafm1tv1"
  }
