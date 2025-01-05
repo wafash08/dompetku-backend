@@ -1,8 +1,20 @@
 import Elysia, { t } from "elysia";
 import { Decimal } from "@prisma/client/runtime/library";
 import { authServices, transactionServices } from "../../application/instance";
+import { AuthorizationError } from "../../infrastructure/entities/errors";
 
 export const transactionRouter = new Elysia({ prefix: "/v1/transactions" })
+	.onBeforeHandle(async ({ headers }) => {
+		const sessionId = headers.authorization?.split(" ")[1];
+		if (!sessionId) {
+			throw new AuthorizationError("Session id is not provided");
+		}
+
+		const session = await authServices.checkSession(sessionId);
+		if (!session) {
+			throw new AuthorizationError("Session id is invalid");
+		}
+	})
 	.derive(async ({ headers }) => {
 		// get sessionId
 		// this code will split string containing "Bearer Token/sessionId"
