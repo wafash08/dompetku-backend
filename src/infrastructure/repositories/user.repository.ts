@@ -19,7 +19,7 @@ export class UserRepository implements IUser {
 			return users;
 		} catch (error) {
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {
-				throw new DBError("Error getting resources from DB");
+				throw new DBError("Error while getting resources from DB");
 			}
 
 			throw new DBError("Something went wrong while doing DB operation");

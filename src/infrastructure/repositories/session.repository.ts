@@ -1,8 +1,9 @@
-import type { PrismaClient } from "@prisma/client";
+import { Prisma, type PrismaClient } from "@prisma/client";
 import type { ISession } from "../entities/interface";
 import "reflect-metadata";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../entities/types";
+import { DBError } from "../entities/errors";
 
 @injectable()
 export class SessionRepository implements ISession {
@@ -13,34 +14,62 @@ export class SessionRepository implements ISession {
 	}
 
 	async getOne(sessionId: string) {
-		const session = await this._prisma.session.findUnique({
-			where: {
-				id: sessionId,
-			},
-		});
+		try {
+			const session = await this._prisma.session.findUnique({
+				where: {
+					id: sessionId,
+				},
+			});
 
-		return session;
+			if (!session) {
+				throw new DBError("Error while getting resources from DB");
+			}
+
+			return session;
+		} catch (error) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
+				throw new DBError("Error getting resources from DB");
+			}
+
+			throw new DBError("Something went wrong while doing DB operation");
+		}
 	}
 
 	async create(userId: string) {
-		const session = await this._prisma.session.create({
-			data: {
-				user: {
-					connect: {
-						id: userId,
+		try {
+			const session = await this._prisma.session.create({
+				data: {
+					user: {
+						connect: {
+							id: userId,
+						},
 					},
 				},
-			},
-		});
+			});
 
-		return session;
+			return session;
+		} catch (error) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
+				throw new DBError("Error getting resources from DB");
+			}
+
+			throw new DBError("Something went wrong while doing DB operation");
+		}
 	}
 
 	async delete(sessionId: string) {
-		await this._prisma.session.delete({
-			where: {
-				id: sessionId,
-			},
-		});
+		try {
+			await this._prisma.session.delete({
+				where: {
+					id: sessionId,
+				},
+			});
+		} catch (error) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
+				throw new DBError("Error getting resources from DB");
+			}
+
+			throw new DBError("Something went wrong while doing DB operation");
+		}
 	}
 }
