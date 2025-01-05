@@ -1,8 +1,9 @@
-import type { PrismaClient } from "@prisma/client";
+import { Prisma, type PrismaClient } from "@prisma/client";
 import type { CreateUser, IUser, UpdateUser } from "../entities/interface";
 import "reflect-metadata";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../entities/types";
+import { DBError } from "../entities/errors";
 
 @injectable()
 export class UserRepository implements IUser {
@@ -13,44 +14,88 @@ export class UserRepository implements IUser {
 	}
 
 	async getAll() {
-		const users = await this._prisma.user.findMany();
-		return users;
+		try {
+			const users = await this._prisma.user.findMany();
+			return users;
+		} catch (error) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
+				throw new DBError("Error getting resources from DB");
+			}
+
+			throw new DBError("Something went wrong while doing DB operation");
+		}
 	}
 
 	async getOne(userIdOrEmail: string) {
-		const user = await this._prisma.user.findFirst({
-			where: {
-				OR: [{ id: userIdOrEmail }, { email: userIdOrEmail }],
-			},
-		});
+		try {
+			const user = await this._prisma.user.findFirst({
+				where: {
+					OR: [{ id: userIdOrEmail }, { email: userIdOrEmail }],
+				},
+			});
 
-		return user;
+			if (!user) {
+				throw new DBError("Error getting resources from DB");
+			}
+
+			return user;
+		} catch (error) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
+				throw new DBError("Error getting resources from DB");
+			}
+
+			throw new DBError("Something went wrong while doing DB operation");
+		}
 	}
 
 	async create(data: CreateUser) {
-		const newUser = this._prisma.user.create({
-			data,
-		});
+		try {
+			const newUser = this._prisma.user.create({
+				data,
+			});
 
-		return newUser;
+			return newUser;
+		} catch (error) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
+				throw new DBError("Error getting resources from DB");
+			}
+
+			throw new DBError("Something went wrong while doing DB operation");
+		}
 	}
 
 	async update(userId: string, data: UpdateUser) {
-		const updatedUser = await this._prisma.user.update({
-			where: {
-				id: userId,
-			},
-			data,
-		});
+		try {
+			const updatedUser = await this._prisma.user.update({
+				where: {
+					id: userId,
+				},
+				data,
+			});
 
-		return updatedUser;
+			return updatedUser;
+		} catch (error) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
+				throw new DBError("Error getting resources from DB");
+			}
+
+			throw new DBError("Something went wrong while doing DB operation");
+		}
 	}
 
 	async delete(userId: string) {
-		await this._prisma.user.delete({
-			where: {
-				id: userId,
-			},
-		});
+		try {
+			await this._prisma.user.delete({
+				where: {
+					id: userId,
+				},
+			});
+		} catch (error) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
+				throw new DBError("Error getting resources from DB");
+			}
+
+			throw new DBError("Something went wrong while doing DB operation");
+		}
 	}
 }
