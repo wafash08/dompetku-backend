@@ -10,9 +10,7 @@ export const transactionRouter = new Elysia({ prefix: "/v1/transactions" })
 		const sessionId = headers.authorization?.split(" ")[1];
 		// check sessionId
 		if (!sessionId) {
-			return {
-				user: null,
-			};
+			throw new Error("Error");
 		}
 		// get user by session id
 		const user = await authServices.decodeSession(sessionId);
@@ -21,7 +19,7 @@ export const transactionRouter = new Elysia({ prefix: "/v1/transactions" })
 	})
 	// routes
 	.get("/", async ({ user }) => {
-		const userId = user?.id as string;
+		const userId = user.id;
 		const transactions = await transactionServices.getAll(userId);
 
 		return transactions;
@@ -36,7 +34,7 @@ export const transactionRouter = new Elysia({ prefix: "/v1/transactions" })
 		"/",
 		async ({ body, user }) => {
 			const { amount, date, note } = body;
-			const userId = user?.id as string;
+			const userId = user.id;
 			const decimalAmount = new Decimal(amount);
 
 			const newTransaction = await transactionServices.create({
