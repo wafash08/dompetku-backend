@@ -5,6 +5,7 @@ import "reflect-metadata";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../infrastructure/entities/types";
 import { UserDTO } from "../dtos/user.dto";
+import { AuthorizationError } from "../../infrastructure/entities/errors";
 
 @injectable()
 export class AuthServices {
@@ -66,7 +67,7 @@ export class AuthServices {
 		const session = await this._sessionRepository.getOne(sessionId);
 
 		if (!session) {
-			throw new Error("Session invalid");
+			throw new AuthorizationError("Session is invalid");
 		}
 
 		const user = await this._userRepository.getOne(session.userId);

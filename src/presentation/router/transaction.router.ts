@@ -4,17 +4,6 @@ import { authServices, transactionServices } from "../../application/instance";
 import { AuthorizationError } from "../../infrastructure/entities/errors";
 
 export const transactionRouter = new Elysia({ prefix: "/v1/transactions" })
-	.onBeforeHandle(async ({ headers }) => {
-		const sessionId = headers.authorization?.split(" ")[1];
-		if (!sessionId) {
-			throw new AuthorizationError("Session id is not provided");
-		}
-
-		const session = await authServices.checkSession(sessionId);
-		if (!session) {
-			throw new AuthorizationError("Session id is invalid");
-		}
-	})
 	.derive(async ({ headers }) => {
 		// get sessionId
 		// this code will split string containing "Bearer Token/sessionId"
@@ -22,7 +11,7 @@ export const transactionRouter = new Elysia({ prefix: "/v1/transactions" })
 		const sessionId = headers.authorization?.split(" ")[1];
 		// check sessionId
 		if (!sessionId) {
-			throw new Error("Error");
+			throw new AuthorizationError("Session id is not provided");
 		}
 		// get user by session id
 		const user = await authServices.decodeSession(sessionId);
@@ -44,7 +33,7 @@ export const transactionRouter = new Elysia({ prefix: "/v1/transactions" })
 	})
 	.post(
 		"/",
-		async ({ body, user }) => {
+		async ({ body, user, set }) => {
 			const { amount, date, note } = body;
 			const userId = user.id;
 			const decimalAmount = new Decimal(amount);
@@ -56,6 +45,7 @@ export const transactionRouter = new Elysia({ prefix: "/v1/transactions" })
 				userId,
 			});
 
+			set.status = 201;
 			return newTransaction;
 		},
 		{
@@ -87,11 +77,12 @@ export const transactionRouter = new Elysia({ prefix: "/v1/transactions" })
 			body: t.Object({
 				amount: t.String(),
 				date: t.Date(),
-				note: t.String(),
+				note: t.Optional(t.String()),
 			}),
 		},
 	)
-	.delete("/:id", async ({ params }) => {
+	.delete("/:id", async ({ params, set }) => {
 		const transactionId = params.id;
+		set.status = 204;
 		await transactionServices.delete(transactionId);
 	});

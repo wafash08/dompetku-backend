@@ -1,0 +1,36 @@
+
+### get all user's transactions
+ GET http://localhost:3000/api/v1/transactions
+ Content-Type: application/json
+ Authorization: Bearer cm5jotrvx0000rqlm8wirkxzw
+
+### get specific user's transaction
+ GET http://localhost:3000/api/v1/transactions/cm5jpi65z0002rqlmdv8s9hto
+ Content-Type: application/json
+ Authorization: Bearer cm5jotrvx0000rqlm8wirkxzw
+
+### create transaction
+ POST http://localhost:3000/api/v1/transactions
+ Content-Type: application/json
+ Authorization: Bearer cm5jotrvx0000rqlm8wirkxzw
+
+ {
+    "amount": "1000000",
+    "date": "2025-01-05T18:27:50.000Z",
+    "note": "top up shopeepay"
+ }
+
+### edit transaction
+ PATCH http://localhost:3000/api/v1/transactions/cm5jpi65z0002rqlmdv8s9hto
+ Content-Type: application/json
+ Authorization: Bearer cm5jotrvx0000rqlm8wirkxzw
+
+ {
+    "amount": "200000",
+    "date": "2025-01-06T18:27:50.000Z",
+    "note": "top up shopeepay"
+ }
+
+### delete transaction
+ DELETE http://localhost:3000/api/v1/transactions/cm5jpi65z0002rqlmdv8s9hto
+ Authorization: Bearer cm5jotrvx0000rqlm8wirkxzw

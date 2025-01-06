@@ -1,19 +1,19 @@
 export class DBError extends Error {
-	public status: string;
-	public code: number;
+	public status: number;
+	public code: string;
 	constructor(message: string) {
 		super(message);
-		this.status = "DB_ERROR";
-		this.code = 500;
+		this.code = "DB_ERROR";
+		this.status = 500;
 	}
 }
 
 export class AuthorizationError extends Error {
-	public status: string;
-	public code: number;
+	public status: number;
+	public code: string;
 	constructor(message: string) {
 		super(message);
-		this.status = "AUTHORIZATION_ERROR";
-		this.code = 401;
+		this.code = "AUTHORIZATION_ERROR";
+		this.status = 401;
 	}
 }
